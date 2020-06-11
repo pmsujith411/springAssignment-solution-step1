@@ -1,6 +1,8 @@
 package com.stackroute.keepnote.repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.stackroute.keepnote.model.Note;
 
@@ -13,22 +15,24 @@ import com.stackroute.keepnote.model.Note;
 public class NoteRepository {
 
 	/* Declare a variable called "list" to store all the notes. */
+	List<Note> notes;
 
 	public NoteRepository() {
 
 		/* Initialize the variable using proper data type */
+		notes = new ArrayList<>();
 	}
 
 	/* This method should return all the notes in the list */
 
 	public List<Note> getList() {
-		return null;
+		return notes;
 	}
 
 	/* This method should set the list variable with new list of notes */
 
-	public void setList(List<Note> list) {
-
+	public void setList(List<Note> notes) {
+		this.notes = notes;	
 	}
 
 	/*
@@ -37,22 +41,29 @@ public class NoteRepository {
 	 */
 
 	public void addNote(Note note) {
-
+		notes.add(note);
 	}
 
 	/* This method should deleted a specified note from the list */
 
-	public boolean deleteNote(int noteId) {
+	public boolean deleteNote(int noteId)
+	{
 		/* Use list iterator to find matching note id and remove it from the list */
+		Optional<Note> optional = notes.stream().filter(note -> note.getNoteId() == noteId).findAny();
+		
+		if(optional.isPresent())
+		{
+			notes.remove(optional.get());
+			return true;
+		}
+		
 		return false;
-		
-		
 	}
 
 	/* This method should return the list of notes */
 
 	public List<Note> getAllNotes() {
-		return null;
+		return notes;
 	}
 
 	/*
@@ -61,7 +72,10 @@ public class NoteRepository {
 	 * exists in the list
 	 */
 
-	public boolean exists(int noteId) {
-		return false;
+	public boolean exists(int noteId) 
+	{
+		Optional<Note> optional = notes.stream().filter(note -> note.getNoteId() == noteId).findAny();
+		
+		return optional.isPresent()?true:false;
 	}
 }
